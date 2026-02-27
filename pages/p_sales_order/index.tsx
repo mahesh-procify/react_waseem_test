@@ -1,0 +1,29 @@
+import * as React from "react";
+import { useEffect } from "react";
+// import { getController } from "kloReact/core/BaseController";
+import DetailPage from "react_waseem_test/pages/p_sales_order/p_detail_test";
+import ListPage from "react_waseem_test/pages/p_sales_order/p_list";
+import { ToastProvider, useToast } from "react_waseem_test/components/Toast";
+import { toastManager } from "react_waseem_test/util/toaster";
+
+// import type p_sales_order from "react_waseem_test/controller/p_sales_order.controller";
+
+function AppContent(props) {
+	const { navParams, internalscreenid } = props;
+	const { showToast } = useToast();
+
+	// Register the toast function with the toast manager
+	useEffect(() => {
+		toastManager.register(showToast);
+	}, [showToast]);
+
+	return navParams.C === "index" ? <ListPage navParams={navParams} internalscreenid={internalscreenid} /> : <DetailPage navParams={navParams} internalscreenid={internalscreenid} />;
+}
+
+export default function MyPage(props) {
+	return (
+		<ToastProvider>
+			<AppContent {...props} />
+		</ToastProvider>
+	);
+}
