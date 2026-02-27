@@ -1,0 +1,4 @@
+metadata/
+entity_gen/
+query_gen/
+Tsconfig.json
