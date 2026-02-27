@@ -3,10 +3,10 @@ import { useTransnode } from "kloReact/hooks/useTransnode";
 // import * as React from "react";
 import { useState, useEffect, memo, useRef } from "react";
 import { Flex, Box, Card, Grid, Input, Field, Tabs, Table, Spinner, Text, Stack, Button, Dialog, IconButton } from "@chakra-ui/react";
-import PageToolbar from "react_waseem_test/components/PageToolbar";
-import ValueHelpSelect from "react_waseem_test/components/ValueHelpSelect";
-import type p_sales_order from "react_waseem_test/controller/p_sales_order.controller";
-import { p_sales_orderState } from "react_waseem_test/controller/p_sales_order.controller";
+import PageToolbar from "react_test2/components/PageToolbar";
+import ValueHelpSelect from "react_test2/components/ValueHelpSelect";
+import type p_sales_order from "react_test2/controller/p_sales_order.controller";
+import { p_sales_orderState } from "react_test2/controller/p_sales_order.controller";
 
 interface SalesItemCardProps {
 	item: any;

@@ -3,10 +3,10 @@ import { useEffect, useState, useMemo, useCallback, memo } from "react";
 import { useTransnode } from "kloReact/hooks/useTransnode";
 import { Table, Link, Checkbox, Flex, Box, Card, Stack, Text, Spinner, Dialog, Button, Portal } from "@chakra-ui/react";
 import { getController } from "kloReact/core/BaseController";
-import PageToolbar from "react_waseem_test/components/PageToolbar";
+import PageToolbar from "react_test2/components/PageToolbar";
 import { NormalizedData } from "kloReact/Interfaces/kloReactInterfaces";
-import type p_sales_order from "react_waseem_test/controller/p_sales_order.controller";
-import type { p_sales_orderState } from "react_waseem_test/controller/p_sales_order.controller";
+import type p_sales_order from "react_test2/controller/p_sales_order.controller";
+import type { p_sales_orderState } from "react_test2/controller/p_sales_order.controller";
 
 interface CardItemProps {
 	itemId: string;

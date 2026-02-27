@@ -1,6 +1,6 @@
 import { KloController } from "kloTouch/jspublic/KloController";
 declare let KloUI5: any;
-@KloUI5("react_waseem_test.controller.p_0025_testing1")
+@KloUI5("react_test2.controller.p_0025_testing1")
 export default class p_0025_testing1 extends KloController {
 	/*public async onPageEnter() {
 	    //This event will be called whenever the screen enters the visible area by means of navigation (Both front and back navigation).

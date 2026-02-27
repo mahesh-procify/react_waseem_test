@@ -2,8 +2,8 @@
 import type { KloEntitySet } from "kloBo/KloEntitySet";
 import BaseController from "kloReact/core/BaseController";
 import { BaseControllerState } from "kloReact/Interfaces/kloReactInterfaces";
-import type { d_sales_order } from "react_waseem_test/entity_gen/d_sales_order";
-import { toastManager } from "react_waseem_test/util/toaster";
+import type { d_sales_order } from "react_test2/entity_gen/d_sales_order";
+import { toastManager } from "react_test2/util/toaster";
 import { TransNode } from "kloReact/core/Transnode";
 // import { KloTransaction } from "kloBo/KloTransaction";
 // declare let KloUI5: any;
@@ -56,7 +56,7 @@ export default class p_sales_order extends BaseController {
 			tn.setProperty("transactionMode", "CREATE");
 
 			// Navigate to detail page
-			this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_waseem_test" });
+			this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_test2" });
 
 			// Create a new entity (this adds it to the entitySet)
 			const newEntity = await entitySet.newEntityP(0);
@@ -167,7 +167,7 @@ export default class p_sales_order extends BaseController {
 		await itemsTN.setData(null);
 
 		tn.setProperty("transactionMode", "DISPLAY");
-		this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_waseem_test" });
+		this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_test2" });
 	}
 
 	updateActiveOrderField(field: string, value: string) {

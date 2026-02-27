@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useEffect } from "react";
 // import { getController } from "kloReact/core/BaseController";
-import DetailPage from "react_waseem_test/pages/p_sales_order/p_detail_test";
-import ListPage from "react_waseem_test/pages/p_sales_order/p_list";
-import { ToastProvider, useToast } from "react_waseem_test/components/Toast";
-import { toastManager } from "react_waseem_test/util/toaster";
+import DetailPage from "react_test2/pages/p_sales_order/p_detail_test";
+import ListPage from "react_test2/pages/p_sales_order/p_list";
+import { ToastProvider, useToast } from "react_test2/components/Toast";
+import { toastManager } from "react_test2/util/toaster";
 
-// import type p_sales_order from "react_waseem_test/controller/p_sales_order.controller";
+// import type p_sales_order from "react_test2/controller/p_sales_order.controller";
 
 function AppContent(props) {
 	const { navParams, internalscreenid } = props;
