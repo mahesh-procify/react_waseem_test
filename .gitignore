@@ -2,3 +2,82 @@ metadata/
 entity_gen/
 query_gen/
 Tsconfig.json
+
+
+# Klarion: Auto-generated .gitignore for Klarion build artifacts
+# This file excludes build-generated files from git tracking
+# Generated on: 2026-02-27T11:28:25.224Z
+
+# Build-generated directories
+metadata/
+entity_gen/
+query_gen/
+build/
+dist/
+out/
+gen/
+generated/
+tsconfig.json
+
+# Build-generated files by type
+*.gen.ts
+*.gen.js
+*.generated.ts
+*.generated.js
+*_gen.ts
+*_gen.js
+
+# Index and metadata files
+INDEX
+INDEX.ts
+INDEX.js
+*.index.ts
+*.index.js
+
+# Compiled JavaScript files from TypeScript (if source is .ts)
+# Uncomment next line if you want to ignore all JS files when TS source exists
+# *.js
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build tools
+.nyc_output/
+coverage/
+*.tgz
+*.tar.gz
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime files
+*.tmp
+*.temp
+.cache/
+
+# CDN and compiled app files
+cdn_app/
+
+# Flavor-specific ignores (add patterns as needed)
+# Example: myapp_*/metadata/
+# Example: myapp_*/entity_gen/
