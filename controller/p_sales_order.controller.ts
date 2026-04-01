@@ -18,7 +18,7 @@ export interface p_sales_orderState extends BaseControllerState {
 	showMessageDialog: boolean;
 	messageDialogTitle: string;
 	messageDialogMessage: string;
-	pendingDeleteData: { selection: string[] } | null;
+	pendingDeleteData: { selection: number[] } | null;
 	shouldClearSelection: boolean;
 	isLoadingSalesItems: boolean;
 	showAddItemDialog: boolean;
@@ -615,7 +615,7 @@ export default class p_sales_order extends BaseController {
 		}
 	}
 
-	prepareDelete(selection: string[]) {
+	prepareDelete(selection: number[]) {
 		const tn = this.tm.getTN("reactstate");
 
 		// Check if any items are selected
@@ -660,18 +660,37 @@ export default class p_sales_order extends BaseController {
 			return;
 		}
 
-		console.log("Deleting entity IDs:", selection);
+		// Get the raw orders entityset to access entities by index
+		const ordersEntitySet = ordersTN.getRawData() as KloEntitySet<d_sales_order>;
+
+		if (!ordersEntitySet) {
+			console.error("Orders entityset not found");
+			return;
+		}
+
+		// Convert indices to entity unique keys
+		const entityKeys: string[] = [];
+		for (const index of selection) {
+			if (index >= 0 && index < ordersEntitySet.length) {
+				const entity = ordersEntitySet[index];
+				if (entity) {
+					entityKeys.push(entity.getEntityUniqueKey());
+				}
+			}
+		}
+
+		console.log("Deleting entity keys:", entityKeys);
 		tn.setProperty("isDeleteing", true);
 		tn.setProperty("showDeleteDialog", false);
 
 		try {
 			// Delete each entity using the TransNode deleteEntity API
 			// Pass the entity unique key directly
-			for (const entityId of selection) {
-				const deleted = await ordersTN.deleteEntity(entityId);
+			for (const entityKey of entityKeys) {
+				const deleted = await ordersTN.deleteEntity(entityKey);
 
 				if (!deleted) {
-					console.warn(`Entity with ID ${entityId} not found or failed to delete`);
+					console.warn(`Entity with key ${entityKey} not found or failed to delete`);
 				}
 			}
 
@@ -720,6 +739,18 @@ export default class p_sales_order extends BaseController {
 		const result = await query.executeP();
 
 		await query.loadAllValuehelp(["status", "country_vh"]);
+
+		// Add value help descriptions as direct properties on each entity
+		// This makes them accessible as entity.status_desc, entity.country_vh_desc in React
+		for (const entity of result) {
+			// Access value help descriptions from the _vh proxy objects
+			if (entity["status_vh"]) {
+				entity["status_desc"] = entity["status_vh"].additional_desc;
+			}
+			if (entity["country_vh_vh"]) {
+				entity["country_vh_desc"] = entity["country_vh_vh"].additional_desc;
+			}
+		}
 
 		console.log("Query Result:", result);
 

@@ -4,15 +4,14 @@ import { useTransnode } from "kloReact/hooks/useTransnode";
 import { Table, Link, Checkbox, Flex, Box, Card, Stack, Text, Spinner, Dialog, Button, Portal } from "@chakra-ui/react";
 import { getController } from "kloReact/core/BaseController";
 import PageToolbar from "react_test2/components/PageToolbar";
-import { NormalizedData } from "kloReact/Interfaces/kloReactInterfaces";
 import type p_sales_order from "react_test2/controller/p_sales_order.controller";
 import type { p_sales_orderState } from "react_test2/controller/p_sales_order.controller";
 
 interface CardItemProps {
-	itemId: string;
+	itemId: number;
 	item: any;
 	isSelected: boolean;
-	onToggleSelect: (itemId: string, checked: boolean) => void;
+	onToggleSelect: (itemId: number, checked: boolean) => void;
 	onClickId: (e: any) => void;
 }
 
@@ -65,10 +64,10 @@ const CardItem = memo(({ itemId, item, isSelected, onToggleSelect, onClickId }: 
 });
 
 interface TableRowItemProps {
-	itemId: string;
+	itemId: number;
 	item: any;
 	isSelected: boolean;
-	onToggleSelect: (itemId: string, checked: boolean) => void;
+	onToggleSelect: (itemId: number, checked: boolean) => void;
 	onClickId: (e: any) => void;
 }
 
@@ -104,11 +103,11 @@ export default function MyPage(props) {
 	// Subscribe to the reactstate TransNode for UI-specific state
 	const { state } = useTransnode("reactstate", internalscreenid);
 
-	// Subscribe to the orders TransNode for orders data (auto-normalized)
+	// Subscribe to the orders TransNode for orders data (stored as array without normalization)
 	const { state: ordersState } = useTransnode("orders", internalscreenid);
 
 	// Extract state properties
-	const items = ordersState as NormalizedData; // This is { ids: [...], entities: {...} } from auto-normalization
+	const items = Array.isArray(ordersState) ? ordersState : []; // ordersState is now a KloEntitySet (array) directly
 	const isDeleteing = (state as p_sales_orderState)?.isDeleteing;
 	const showDeleteDialog = (state as p_sales_orderState)?.showDeleteDialog;
 	const showMessageDialog = (state as p_sales_orderState)?.showMessageDialog;
@@ -117,10 +116,10 @@ export default function MyPage(props) {
 	const pendingDeleteData = (state as p_sales_orderState)?.pendingDeleteData;
 	const shouldClearSelection = (state as p_sales_orderState)?.shouldClearSelection;
 
-	// Use Set for O(1) lookup performance, storing item IDs instead of indices
-	const [selection, setSelection] = useState<Set<string>>(new Set());
+	// Use Set for O(1) lookup performance, storing item indices
+	const [selection, setSelection] = useState<Set<number>>(new Set());
 
-	const indeterminate = useMemo(() => selection.size > 0 && selection.size < items?.ids?.length, [selection.size, items?.ids?.length]);
+	const indeterminate = useMemo(() => selection.size > 0 && selection.size < items.length, [selection.size, items.length]);
 
 	useEffect(() => {
 		// Fetch items and set up property change monitoring
@@ -130,8 +129,9 @@ export default function MyPage(props) {
 	// Memoize handlers for better performance
 	const handleSelectAll = useCallback(
 		(changes) => {
-			if (changes.checked && items?.ids) {
-				setSelection(new Set(items.ids));
+			if (changes.checked && items.length > 0) {
+				// Select all item indices
+				setSelection(new Set(items.map((_, idx) => idx)));
 			} else {
 				setSelection(new Set());
 			}
@@ -140,11 +140,11 @@ export default function MyPage(props) {
 	);
 
 	const handleDelete = useCallback(() => {
-		if (!items?.ids) return;
+		if (items.length === 0) return;
 
-		// Pass the selected entity IDs directly
-		const selectedIds = Array.from(selection) as string[];
-		controller.prepareDelete(selectedIds);
+		// Pass the selected indices
+		const selectedIndices = Array.from(selection);
+		controller.prepareDelete(selectedIndices);
 	}, [controller, selection, items]);
 
 	// Clear selection after successful delete
@@ -156,13 +156,13 @@ export default function MyPage(props) {
 	}, [shouldClearSelection, controller]);
 
 	// Stable callback for toggling individual row selection
-	const handleToggleSelect = useCallback((itemId: string, checked: boolean) => {
+	const handleToggleSelect = useCallback((itemIndex: number, checked: boolean) => {
 		setSelection((prev) => {
 			const newSet = new Set(prev);
 			if (checked) {
-				newSet.add(itemId);
+				newSet.add(itemIndex);
 			} else {
-				newSet.delete(itemId);
+				newSet.delete(itemIndex);
 			}
 			return newSet;
 		});
@@ -208,13 +208,13 @@ export default function MyPage(props) {
 
 			{/* Mobile Card View */}
 			<Box display={{ base: "block", md: "none" }} p={3}>
-				{!items?.ids || items.ids.length === 0 ?
+				{items.length === 0 ?
 					<Flex justify="center" align="center" py={8}>
 						<Spinner size="lg" color="teal.500" />
 					</Flex>
 				:	<Stack gap={3}>
-						{items.ids.map((id) => (
-							<CardItem key={id} itemId={id} item={items.entities[id]} isSelected={selection.has(id)} onToggleSelect={handleToggleSelect} onClickId={handleClickId} />
+						{items.map((item, idx) => (
+							<CardItem key={idx} itemId={idx} item={item} isSelected={selection.has(idx)} onToggleSelect={handleToggleSelect} onClickId={handleClickId} />
 						))}
 					</Stack>
 				}
@@ -241,7 +241,7 @@ export default function MyPage(props) {
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{!items?.ids || items.ids.length === 0 ?
+						{items.length === 0 ?
 							<Table.Row>
 								<Table.Cell colSpan={7} textAlign="center" py={8}>
 									<Flex justify="center" align="center">
@@ -249,7 +249,7 @@ export default function MyPage(props) {
 									</Flex>
 								</Table.Cell>
 							</Table.Row>
-						:	items.ids.map((id) => <TableRowItem key={id} itemId={id} item={items.entities[id]} isSelected={selection.has(id)} onToggleSelect={handleToggleSelect} onClickId={handleClickId} />)}
+						:	items.map((item, idx) => <TableRowItem key={idx} itemId={idx} item={item} isSelected={selection.has(idx)} onToggleSelect={handleToggleSelect} onClickId={handleClickId} />)}
 					</Table.Body>
 				</Table.Root>
 			</Box>

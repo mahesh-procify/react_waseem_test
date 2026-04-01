@@ -77,16 +77,17 @@ export default function DetailPage(props) {
 	const deleteItemData = state?.deleteItemData;
 	const isDeletingItem = state?.isDeletingItem;
 
-	// Subscribe to order_detail transnode for order data (normalized)
+	// Subscribe to order_detail transnode for order data (stored as entity directly)
 	const { state: orderDetailState } = useTransnode("order_detail", internalscreenid);
-	const activeOrderEnt = controller.tm.getTN("order_detail").getRawData(); // Get raw entity data if needed
+	// Get the raw entity to access value help qualifiers (status_vh, country_vh_vh, etc.)
+	const activeOrderEnt = controller.tm.getTN("order_detail").getRawData();
 
-	// Access the entity from normalized state
-	const activeOrder = (orderDetailState as any)?.ids?.length > 0 ? (orderDetailState as any).entities[(orderDetailState as any).ids[0]] : null;
+	// Access the order directly from state (typed as any to access properties)
+	const activeOrder = orderDetailState as any;
 
-	// Subscribe to items transnode for sales items data
+	// Subscribe to items transnode for sales items data (stored as array directly)
 	const { state: itemsState } = useTransnode("items", internalscreenid);
-	const salesItems = (itemsState as any)?.ids?.length > 0 ? (itemsState as any).ids.map((id) => (itemsState as any).entities[id]) : [];
+	const salesItems = Array.isArray(itemsState) ? itemsState : [];
 
 	const [activeTab, setActiveTab] = useState("details");
 
