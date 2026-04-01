@@ -17,7 +17,11 @@ function AppContent(props) {
 		toastManager.register(showToast);
 	}, [showToast]);
 
-	return navParams.C === "index" ? <ListPage navParams={navParams} internalscreenid={internalscreenid} /> : <DetailPage navParams={navParams} internalscreenid={internalscreenid} />;
+	return (
+		navParams.C === "index" ? <ListPage navParams={navParams} internalscreenid={internalscreenid} />
+		: navParams.C === "p_detail_test" ? <DetailPage navParams={navParams} internalscreenid={internalscreenid} />
+		: <ListPage navParams={navParams} internalscreenid={internalscreenid} />
+	);
 }
 
 export default function MyPage(props) {

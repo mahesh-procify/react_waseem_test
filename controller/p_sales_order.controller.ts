@@ -56,7 +56,7 @@ export default class p_sales_order extends BaseController {
 			tn.setProperty("transactionMode", "CREATE");
 
 			// Navigate to detail page
-			this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_test2" });
+			this.navTo({ S: "p_sales_order", C: "p_detail_test", F: "react_test2", H: true });
 
 			// Create a new entity (this adds it to the entitySet)
 			const newEntity = await entitySet.newEntityP(0);
